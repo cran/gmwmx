@@ -21,10 +21,15 @@ str(data_dobs)
 ## ---- fig.height=5, fig.align='center', fig.width=6---------------------------
 plot(data_dobs$t, data_dobs$y, type="l")
 
-## -----------------------------------------------------------------------------
-fit_dobs_wn_plp_gmwmx = estimate_gmwmx(x = data_dobs, theta_0 = c(0.1, 0.1, 0.1), 
-                                       model_string = "wn+powerlaw", 
-                                       n_seasonal = 1, ci = T)
+## ---- eval=F, echo=T----------------------------------------------------------
+#  fit_dobs_wn_plp_gmwmx = estimate_gmwmx(x = data_dobs, theta_0 = c(0.1, 0.1, 0.1),
+#                                         model_string = "wn+powerlaw",
+#                                         n_seasonal = 1, ci = T)
+#  
+
+## ---- echo=F, eval=T----------------------------------------------------------
+file_path = system.file("extdata", "fit_dobs_wn_plp_gmwmx.rda", package = "gmwmx", mustWork = T)
+load(file_path)
 
 ## -----------------------------------------------------------------------------
 class(fit_dobs_wn_plp_gmwmx)
@@ -38,7 +43,11 @@ fit_dobs_wn_plp_gmwmx$theta_hat
 plot(fit_dobs_wn_plp_gmwmx)
 
 ## ---- eval=F, echo=T----------------------------------------------------------
-#  fit_dobs_wn_plp_gmwmx_2 = estimate_gmwmx(x = data_dobs, theta_0 = c(0.1, 0.1, 0.1), model_string = "wn+powerlaw", n_seasonal = 1, k_iter = 2)
+#  fit_dobs_wn_plp_gmwmx_2 = estimate_gmwmx(x = data_dobs,
+#                                           theta_0 = c(0.1, 0.1, 0.1),
+#                                           model_string = "wn+powerlaw",
+#                                           n_seasonal = 1,
+#                                           k_iter = 2)
 
 ## ---- eval=F, echo=T----------------------------------------------------------
 #  fit_dobs_wn_plp_mle = estimate_hector(x = data_dobs,
@@ -68,22 +77,42 @@ fit_dobs_wn_plp_mle$theta_hat
 cola_path = system.file("extdata", "cola.rda", package = "gmwmx", mustWork = T)
 load(cola_path)
 
+## ---- fig.height=8, fig.width=6, fig.align='center', eval=F, echo=T-----------
+#  fit_cola_wn_plp = estimate_gmwmx(cola, model_string = "wn+powerlaw",
+#                                   theta_0 = c(0.1,0.1,0.1),
+#                                   n_seasonal = 1,
+#                                   ci = T)
+
+## ---- echo=F, eval=T----------------------------------------------------------
+file_path = system.file("extdata", "fit_cola_wn_plp.rda", package = "gmwmx", mustWork = T)
+load(file_path)
+
 ## ---- fig.height=8, fig.width=6, fig.align='center', eval=T-------------------
-fit_cola_wn_plp = estimate_gmwmx(cola, model_string = "wn+powerlaw", 
-                                 theta_0 = c(0.1,0.1,0.1),
-                                 n_seasonal = 1, 
-                                 ci = T)
 plot(fit_cola_wn_plp)
 
-fit_cola_wn_fgn = estimate_gmwmx(cola, model_string = "wn+fgn", theta_0 = c(0.1,0.1,0.2),
-                                                          n_seasonal = 1, 
-                                                          ci = T)
+## ---- fig.height=8, fig.width=6, fig.align='center', eval=F, echo=T-----------
+#  fit_cola_wn_fgn = estimate_gmwmx(cola, model_string = "wn+fgn", theta_0 = c(0.1,0.1,0.2),
+#                                                            n_seasonal = 1,
+#                                                            ci = T)
+
+## ---- echo=F, eval=T----------------------------------------------------------
+file_path = system.file("extdata", "fit_cola_wn_fgn.rda", package = "gmwmx", mustWork = T)
+load(file_path)
+
+## ---- fig.height=8, fig.width=6, fig.align='center', eval=T-------------------
 plot(fit_cola_wn_fgn)
 
-fit_cola_wn_matern = estimate_gmwmx(cola, model_string = "wn+matern", 
-                                    theta_0 = c(0.1,0.1,0.1,0.1),
-                                                          n_seasonal = 1, 
-                                                          ci = T)
+## ---- fig.height=8, fig.width=6, fig.align='center', eval=F, echo=T-----------
+#  fit_cola_wn_matern = estimate_gmwmx(cola, model_string = "wn+matern",
+#                                      theta_0 = c(0.1,0.1,0.1,0.1),
+#                                      n_seasonal = 1,
+#                                      ci = T)
+
+## ---- echo=F, eval=T----------------------------------------------------------
+file_path = system.file("extdata", "fit_cola_wn_matern.rda", package = "gmwmx", mustWork = T)
+load(file_path)
+
+## ---- fig.height=8, fig.width=6, fig.align='center', eval=T-------------------
 plot(fit_cola_wn_matern)
 
 

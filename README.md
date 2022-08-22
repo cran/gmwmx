@@ -1,8 +1,15 @@
 <!-- badges: start -->
 ![example workflow](https://github.com/SMAC-Group/gmwmx/actions/workflows/R-CMD-check.yaml/badge.svg)
+[![CRAN status](https://www.r-pkg.org/badges/version/gmwmx)](https://CRAN.R-project.org/package=gmwmx)
 ![](https://img.shields.io/github/last-commit/SMAC-Group/gmwmx) 
 [<img src="https://s-a.github.io/license/img/agpl-3.0.svg" />](https://s-a.github.io/license/?license=agpl-3.0&fullname=Stephan%20Ahlf&year=2015&profile=https://github.com/s-a&projectUrl=https://github.com/s-a/license&projectName=License%20Demo "")
 [![minimal R version](https://img.shields.io/badge/R%3E%3D-4.0.0-6666ff.svg)](https://cran.r-project.org/)
+[![CRAN RStudio mirror
+downloads](http://cranlogs.r-pkg.org/badges/last-day/gmwmx)](https://www.r-pkg.org/pkg/gmwmx)
+[![CRAN RStudio mirror
+downloads](http://cranlogs.r-pkg.org/badges/gmwmx)](https://www.r-pkg.org/pkg/gmwmx)
+[![CRAN RStudio mirror
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/gmwmx)](https://www.r-pkg.org/pkg/gmwmx)
 <!-- badges: end -->
 
 
@@ -18,8 +25,22 @@ package.
 
 ## Installation Instructions
 
-The `gmwmx` package is available only on GitHub at the moment. The latest
-version can be installed with:
+The `gmwmx` package is available on both CRAN and GitHub. The CRAN
+version is considered stable while the GitHub version is subject to
+modifications/updates which may lead to installation problems or broken
+functions. You can install the stable version of the `gmwmx` package
+with:
+
+``` r
+install.packages("gmwmx")
+```
+
+For users who are interested in having the latest developments, the
+GitHub version is ideal although more dependencies are required to run a
+stable version of the package. Most importantly, users **must** have a
+(`C++`) compiler installed on their machine that is compatible with R
+(e.g. `Clang`).
+
 
 ``` r
 # Install dependencies
@@ -58,7 +79,7 @@ The `gmwmx` package relies on a limited number of external libraries, but notabl
 
 ## License
 
-The license this source code is released under is the GNU AFFERO GENERAL PUBLIC LICENSE (AGPL) v3.0. See the LICENSE file for full text. 
+This source code is released under is the GNU AFFERO GENERAL PUBLIC LICENSE (AGPL) v3.0. 
 
 
 ## References
