@@ -443,7 +443,7 @@ functional model as well as parameters of a stochastic model (i.e. <span class=
 of</p>
 <ol style="list-style-type: decimal">
 <li>White noise (<code>wn</code>)</li>
-<li>Matèrn process (<code>matern</code>)</li>
+<li>Matérn process (<code>matern</code>)</li>
 <li>Fractional Gaussian noise (<code>fgn</code>) and</li>
 <li>Power Law process (<code>powerlaw</code>).</li>
 </ol>
@@ -479,15 +479,15 @@ a Power Law process for the stochastic model.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(fit_dobs_wn_plp_gmwmx)</span></code></pre></div>
 <pre><code>## GNSS time series model
 ## 
-##  * Model:  
+##  * Model: wn + powerlaw 
 ## 
 ##  * Functional parameters:
-##      bias                           :     +0.01201297 +/- 0.020
-##      trend                          :     +0.00000835 +/- 0.000
-##      A*cos(U)                       :     -0.00065540 +/- 0.000
-##      A*sin(U)                       :     +0.00001579 +/- 0.000
-##      jump                           :     -0.00375807 +/- 0.001
-##      jump                           :     +0.00156788 +/- 0.001
+##      bias                 :  +0.012013 +/- 0.020
+##      trend                :  +0.000008 +/- 0.000
+##      A*cos(U)             :  -0.000655 +/- 0.000
+##      A*sin(U)             :  +0.000016 +/- 0.000
+##      jump                 :  -0.003758 +/- 0.001
+##      jump                 :  +0.001568 +/- 0.001
 ## 
 ##  * Stochastc parameters:
 ##      wn_sigma2                      :     +0.00000079
@@ -554,7 +554,7 @@ Boundary Observatory (PBO)</a> as <code>gnssts</code> object with
 this signal. More precisely let us consider:</p>
 <ul>
 <li>a White noise and a PowerLaw process</li>
-<li>a White noise coupled with a Matèrn process</li>
+<li>a White noise coupled with a Matérn process</li>
 <li>a White noise and a Fractional Gaussian noise</li>
 </ul>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>fit_cola_wn_plp <span class="ot">=</span> <span class="fu">estimate_gmwmx</span>(cola, <span class="at">model_string =</span> <span class="st">&quot;wn+powerlaw&quot;</span>, </span>

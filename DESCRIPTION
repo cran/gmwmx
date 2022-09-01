@@ -1,7 +1,7 @@
 Package: gmwmx
 Title: Estimate Functional and Stochastic Parameters of Linear Models
         with Correlated Residuals
-Version: 1.0.1
+Version: 1.0.2
 Authors@R: c(
     person("Davide Antonio", "Cucci", role = c("aut")),
     person("Lionel", "Voirol", email = "lionelvoirol@hotmail.com", role = c("aut", "cre")),
@@ -20,9 +20,9 @@ Depends: R (>= 4.0.0)
 Suggests: rmarkdown, knitr, simts
 VignetteBuilder: knitr
 LinkingTo: Rcpp, RcppArmadillo
-Imports: Rcpp, fs, stringi, wv, Matrix, longmemo, rjson
+Imports: Rcpp, fs, stringi, wv, Matrix, longmemo, rjson, ltsa
 NeedsCompilation: yes
-Packaged: 2022-08-20 14:39:10 UTC; lionel
+Packaged: 2022-09-01 15:48:05 UTC; lionel
 Author: Davide Antonio Cucci [aut],
   Lionel Voirol [aut, cre],
   Stéphane Guerrier [aut],
@@ -30,4 +30,4 @@ Author: Davide Antonio Cucci [aut],
   Gaël Kermarrec [ctb]
 Maintainer: Lionel Voirol <lionelvoirol@hotmail.com>
 Repository: CRAN
-Date/Publication: 2022-08-22 09:20:08 UTC
+Date/Publication: 2022-09-01 16:10:02 UTC

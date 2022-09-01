@@ -6,9 +6,9 @@ infuse_remove_outliers_tmp = function(data_file,
                                       n_seasonal,
                                       IQ_factor,
                                       x){
-  
-  
+  # define template
   remove_outliers_tmpl = "DataFile              data_file_value\nDataDirectory         data_directory_value\nOutputFile            output_file_value\ninterpolate           no\nseasonalsignal        seasonal_signal_value\nhalfseasonalsignal    half_seasonal_signal_value\nestimateoffsets       estimate_offsets_value\nIQ_factor             iq_factor_value\nPhysicalUnit          mm\n"
+  
   
   # replace data_file_value by data_file
   tpl_1 = stringi::stri_replace( str = remove_outliers_tmpl, regex =  "data_file_value" , replacement = data_file)
@@ -35,9 +35,17 @@ infuse_estimate_trend_tmp = function(data_file,
                                      output_file,
                                      noise_model,
                                      n_seasonal,
+                                     likelihood_method = "AmmarGrag", 
                                      x){
   
-  estimate_trend_tmpl = "DataFile              data_file_value\nDataDirectory         data_directory_value\nOutputFile            output_file_value\ninterpolate           no\nPhysicalUnit          mm\nScaleFactor           1.0\nNoiseModels           noise_models_value\nseasonalsignal        seasonal_signal_value\nhalfseasonalsignal    half_seasonal_signal_value\nestimateoffsets       estimate_offsets_value\nestimatepostseismic   no\nestimateslowslipevent no\nRandomiseFirstGuess   no\nTimeNoiseStart        1\nDegreePolynomial      degree_polynomial_value\nLikelihoodMethod      FullCov\nJSON                  yes\n"
+  # define template differently based on the specified ci method
+  if(likelihood_method == "FullCov"){
+    estimate_trend_tmpl = "DataFile              data_file_value\nDataDirectory         data_directory_value\nOutputFile            output_file_value\ninterpolate           no\nPhysicalUnit          mm\nScaleFactor           1.0\nNoiseModels           noise_models_value\nseasonalsignal        seasonal_signal_value\nhalfseasonalsignal    half_seasonal_signal_value\nestimateoffsets       estimate_offsets_value\nestimatepostseismic   no\nestimateslowslipevent no\nRandomiseFirstGuess   no\nTimeNoiseStart        1\nDegreePolynomial      degree_polynomial_value\nLikelihoodMethod      FullCov\nJSON                  yes\n"
+  }else if(likelihood_method == "AmmarGrag"){
+    estimate_trend_tmpl = "DataFile              data_file_value\nDataDirectory         data_directory_value\nOutputFile            output_file_value\ninterpolate           no\nPhysicalUnit          mm\nScaleFactor           1.0\nNoiseModels           noise_models_value\nseasonalsignal        seasonal_signal_value\nhalfseasonalsignal    half_seasonal_signal_value\nestimateoffsets       estimate_offsets_value\nestimatepostseismic   no\nestimateslowslipevent no\nRandomiseFirstGuess   no\nTimeNoiseStart        1\nDegreePolynomial      degree_polynomial_value\nLikelihoodMethod      AmmarGrag\nJSON                  yes\n"
+    
+  }
+  
   
   # replace data_file_value by data_file
   tpl_1 = stringi::stri_replace( str = estimate_trend_tmpl, regex =  "data_file_value" , replacement = data_file)
@@ -69,7 +77,8 @@ infuse_estimate_trend_tmp = function(data_file,
 #' @param x A \code{gnssts} object
 #' @param n_seasonal An \code{integer} specifying the number of seasonal component in the time series.
 #' @param model_string A \code{string} specifying the model to be estimated.
-#' @param cleanup  An \code{boolean} specifying if the files created by the estimation procedure should be cleaned.
+#' @param likelihood_method A \code{string} taking either value "FullCov" or "AmmarGrag" that specify the method for the Likelihood computation.
+#' @param cleanup  A \code{boolean} specifying if the files created by the estimation procedure should be cleaned.
 #' @return A \code{gnsstsmodel} object.
 #' @export
 #' @importFrom rjson fromJSON
@@ -88,13 +97,11 @@ estimate_hector <- function(
     x,
     n_seasonal = 1, 
     model_string,
+    likelihood_method = "AmmarGrag",
     cleanup = TRUE
 ) {
   
 
-  
-  
-  
   if (!("gnssts" %in% class(x))) {
     stop("x must be an object of type 'gnssts")
   }
@@ -106,7 +113,7 @@ estimate_hector <- function(
   model = create_model_descriptor(model_string)
   
   # create temporary folders
-  working_folder = paste(tempdir(), stri_rand_strings(n=1,length = 16), sep = "/")
+  working_folder = paste(tempdir(), stringi::stri_rand_strings(n=1,length = 16), sep = "/")
   
   if (cleanup == F) {
     message(paste("Working in", working_folder))
@@ -127,32 +134,21 @@ estimate_hector <- function(
                                   output_file = output_file,
                                   noise_model = gen_hector_model(model), 
                                   n_seasonal = n_seasonal, 
-                                  x = x)
+                                  x = x, 
+                                  likelihood_method = likelihood_method)
   
-  # infuse hector configuration file using file saved in R/sysdata.rda
-  # cfg = infuse(
-  #   file_or_string  = estmatetrend_tmpl,
-  #   list(
-  #     DataFile = "ts.mom", 
-  #     DataDirectory = working_folder, 
-  #     OutputFile = output_file,
-  #     NoiseModels = gen_hector_model(model),
-  #     seasonalsignal = if (n_seasonal > 0) "yes" else "no",
-  #     halfseasonalsignal = if (n_seasonal > 1) "yes" else "no",
-  #     estimateoffsets = if (!is.null(x$jumps[1])) "yes" else "no",
-  #     DegreePolynomial = 1
-  #   )
-  # )
   
   # write cfg file
   write(cfg, file = cfg_file)
   
-  # run hector assuming that estimatetrend is accesible in the PATH
+  # define command to run hector on signal with ctl file
   cmd = sprintf("cd %s; %s '%s'", working_folder, "estimatetrend", cfg_file)
   
+  # run hector assuming that estimatetrend is accesible in the PATH
   timing = system.time({out = system(cmd, intern = TRUE)})
   
-  json = fromJSON(file = paste(working_folder, "estimatetrend.json", sep="/"))
+  # parse json
+  json = rjson::fromJSON(file = paste(working_folder, "estimatetrend.json", sep="/"))
   
   # collect deterministic parameters
   
@@ -180,10 +176,14 @@ estimate_hector <- function(
     json[["jumps_sigmas"]]
   )
   
-  names(beta_hat) <- c("bias", "trend", rep(c("A*cos(U)", "A*sin(U)"), n_seasonal), rep("jump", length(x$jumps)))
+  # set names of beta std
+  names(beta_std) = sprintf("std_%s", names(beta_hat))
+  
   
   # transform beta hat to vector
   beta_hat = as.vector(unlist(beta_hat))
+  names(beta_hat) <- c("bias", "trend", rep(c("A*cos(U)", "A*sin(U)"), n_seasonal), rep("jump", length(x$jumps)))
+  
   
   # collect stochastic parameters
   theta_hat = gen_pick_params_hector(model, json)
@@ -247,7 +247,7 @@ estimate_hector <- function(
 #' 
 #' @param x A \code{gnssts} object
 #' @param n_seasonal An \code{integer} specifying the number of seasonal component in the time series.
-#' @param IQ_factor the \code{IQ_factor} parameter in hector removeoutliers.ctl
+#' @param IQ_factor A \code{double} specifying the number used to scale the interquartile range and corresponding to the argument \code{IQ_factor} in Hector removeoutliers.ctl
 #' @param cleanup  An \code{boolean} specifying if temporary files should be cleaned.
 #' @return A \code{gnssts} object.
 #' @export

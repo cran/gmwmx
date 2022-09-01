@@ -4,7 +4,13 @@
 \alias{estimate_hector}
 \title{Estimate a stochastic model based on the MLE and the Hector implementation.}
 \usage{
-estimate_hector(x, n_seasonal = 1, model_string, cleanup = TRUE)
+estimate_hector(
+  x,
+  n_seasonal = 1,
+  model_string,
+  likelihood_method = "AmmarGrag",
+  cleanup = TRUE
+)
 }
 \arguments{
 \item{x}{A \code{gnssts} object}
@@ -13,7 +19,9 @@ estimate_hector(x, n_seasonal = 1, model_string, cleanup = TRUE)
 
 \item{model_string}{A \code{string} specifying the model to be estimated.}
 
-\item{cleanup}{An \code{boolean} specifying if the files created by the estimation procedure should be cleaned.}
+\item{likelihood_method}{A \code{string} taking either value "FullCov" or "AmmarGrag" that specify the method for the Likelihood computation.}
+
+\item{cleanup}{A \code{boolean} specifying if the files created by the estimation procedure should be cleaned.}
 }
 \value{
 A \code{gnsstsmodel} object.
