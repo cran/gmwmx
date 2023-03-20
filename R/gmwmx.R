@@ -131,7 +131,7 @@ wvar_missing = function(Xt, alpha = 0.05){
 }
 
 
-#' Estimate a stochastic model in a two-steps procedure using the GMWMX estimator.
+#' Estimate a stochastic model in a two-steps procedure using the GMWMX estimator. 
 #' 
 #' @param x A \code{gnssts} object
 #' @param theta_0 A \code{vector} specifying the initial values for the vector of parameter of the stochastic model considered.
@@ -151,11 +151,13 @@ wvar_missing = function(Xt, alpha = 0.05){
 #' @export
 #' 
 #' @examples 
+#' \dontrun{
 #' data(cola)
 #' fit_gmwmx = estimate_gmwmx(x = cola,
 #'                            theta_0 = c(0.1,0.1,0.1,0.1), 
 #'                            n_seasonal = 1, 
 #'                            model_string = "wn+matern")
+#' }
 #' 
 estimate_gmwmx <- function(
   x,
@@ -167,7 +169,7 @@ estimate_gmwmx <- function(
   ci = FALSE,
   k_iter = 1
   ) {
-
+ 
   # check that the provided object is a gnssts object
   if (!("gnssts" %in% class(x))) {
     stop("x must be an object of type 'gnssts'")
@@ -178,13 +180,29 @@ estimate_gmwmx <- function(
     stop("Incorrect provided argument k_iter. Argument k_iter should be either the numeric value 1 or 2. Default value if 1.")
   }
   
+  # throw a warning about random walk with gmwmx
+  if(grepl(pattern = "rw", x = model_string)){
+    warning("The properties of the GMWMX when the specified stochastic model includes a Random Walk have not been studied and the results may be unreliable. Moreover, the GMWMX-2 and confidence intervals are not yet supported.")
+  }
+  
+  # check that GMWMX2 or ci are not specified if rw in stochastic model
+  if(grepl(pattern = "rw", x = model_string)){
+    if(k_iter>1){
+      stop("Random Walk specified in stochastic model. The GMWMX-2 is not yet implemented when the specified stochastic model includes a Random Walk.")
+    }
+    if(ci){
+      stop("Random Walk specified in stochastic model. Confidence intervals are not yet implemented when the specified stochastic model includes a Random Walk.")
+    }
+  }
+  
+  # create model
   model = create_model_descriptor(model_string)
   
   # handle gaps
   t_nogap = x$t[1]:tail(x$t,1) # TODO: handle sampling period
   which_data = is.element(t_nogap, x$t)
   
-  
+  # gmwmx algorithm 
   timing = system.time({
   
     X = create_A_matrix(t_nogap = t_nogap, jumps = x$jumps, n_seasonal =  n_seasonal)
@@ -204,13 +222,18 @@ estimate_gmwmx <- function(
 
     #  compute residuals
     rsd_data = x$y - X[which_data, ] %*% beta # compute residuals where I have data
-   
-    # where I don't have data residuals are zero
-    # rsd = rep(0, length(t_nogap)) 
-    # rsd[which_data] = rsd_data
+    
+    #  create vector of length of signal including NA
+    rsd_with_na = vector(mode = "numeric", length = length(t_nogap))
+    
+    # set non NA value to their value
+    rsd_with_na[which_data] = rsd_data 
+    
+    # set to NA value which are not set
+    rsd_with_na[!which_data] = NA
     
     # compute residuals only where I have data
-    rsd = rsd_data
+    rsd = rsd_with_na
     
     # compute wavelet variance of the residuals
     wv_rsd = wvar_missing(rsd)
@@ -226,9 +249,6 @@ estimate_gmwmx <- function(
     
     # compute variance covariance matrix for weighted least square 
     Sigma = gen_covariance(theta_hat, length(t_nogap), model)
-    
-    # check with true Sigma
-    # trueSigma = gen_covariance(theta = c(  sigma2_wn, sigma2_powerlaw,d), length(t_nogap), model)
     
     # repeat procedure k-1 times if specified
     if(k_iter > 1){
@@ -256,8 +276,17 @@ estimate_gmwmx <- function(
         # compute residuals
         rsd_data = x$y - X[which_data, ] %*% beta # compute residuals where I have data
         
+        #  create vector of length of signal including NA
+        rsd_with_na = vector(mode = "numeric", length = length(t_nogap))
+        
+        # set non NA value to their value
+        rsd_with_na[which_data] = rsd_data 
+        
+        # set to NA value which are not set
+        rsd_with_na[!which_data] = NA
+        
         # compute residuals only where I have data
-        rsd = rsd_data
+        rsd = rsd_with_na
         
         # compute wavelet variance of the residuals
         wv_rsd = wvar_missing(rsd)

@@ -1,8 +1,5 @@
-<!-- badges: start -->
 
-    
-      
-      
+<!-- badges: start -->
 ![example workflow](https://github.com/SMAC-Group/gmwmx/actions/workflows/R-CMD-check.yaml/badge.svg)
 [![CRAN status](https://www.r-pkg.org/badges/version/gmwmx)](https://CRAN.R-project.org/package=gmwmx)
 ![](https://img.shields.io/github/last-commit/SMAC-Group/gmwmx) 
@@ -18,7 +15,7 @@ downloads](https://cranlogs.r-pkg.org/badges/grand-total/gmwmx)](https://www.r-p
 # `gmwmx` Overview <a href="https://smac-group.com/"><img src="man/figures/logo.png" align="right" style="width: 20%; height: 20%"/></a>
 
 
-The `gmwmx` `R` package implement the Generalized Method of Wavelet Moments with Exogenous Inputs estimator (GMWMX) introduced in [Cucci, D. A., Voirol, L., Kermarrec, G., Montillet, J. P., and Guerrier, S. (2022) <arXiv:2206.09668>](https://arxiv.org/abs/2206.09668) and provides functions to estimate times series models that can be expressed as linear models with correlated residuals. Moreover, the `gmwmx` package provides tools to compare and analyze estimated models and methods to easily compare results with the Maximum Likelihood Estimator (MLE) implemented in [Hector](https://teromovigo.com/hector/), allowing to replicate the examples and simulations considered in [Cucci, D. A., Voirol, L., Kermarrec, G., Montillet, J. P., and Guerrier, S. (2022) <arXiv:2206.09668>](https://arxiv.org/abs/2206.09668). In particular, this package implements a statistical inference framework for the functional and stochastic parameters of models such as those used to model Global Navigation Satellite System (GNSS) observations, enabling the comparison of the proposed method to the standard MLE estimates implemented in [Hector](https://teromovigo.com/hector/). 
+The `gmwmx` `R` package implement the Generalized Method of Wavelet Moments with Exogenous Inputs estimator (GMWMX) introduced in [Cucci, D. A., Voirol, L., Kermarrec, G., Montillet, J. P., and Guerrier, S. (2022)](https://doi.org/10.1007/s00190-023-01702-8) and provides functions to estimate times series models that can be expressed as linear models with correlated residuals. Moreover, the `gmwmx` package provides tools to compare and analyze estimated models and methods to easily compare results with the Maximum Likelihood Estimator (MLE) implemented in [Hector](https://teromovigo.com/hector/), allowing to replicate the examples and simulations considered in [Cucci, D. A., Voirol, L., Kermarrec, G., Montillet, J. P., and Guerrier, S. (2022)](https://doi.org/10.1007/s00190-023-01702-8). In particular, this package implements a statistical inference framework for the functional and stochastic parameters of models such as those used to model Global Navigation Satellite System (GNSS) observations, enabling the comparison of the proposed method to the standard MLE estimates implemented in [Hector](https://teromovigo.com/hector/). 
 
 Find the package vignettes and user's manual at the [package website](https://smac-group.github.io/gmwmx/index.html).
 
@@ -75,17 +72,32 @@ For Linux users that are on distributions supported by `Hector`, this can be eas
 
 ```
 
+Some users have reported that the procedure described above did not work on their installation and that even after completing these steps, the path containing the executable binaries of `Hector` was not accessible to the `PATH` recognized by `R`. In this case, a strategy that seems to work is to directly indicate the path where `Hector` is located by executing the following command before executing a function that runs `Hector`:
+
+```
+Sys.setenv(PATH = "$HOME/app/hector/bin") 
+```
+
+where `"$HOME/app/hector/bin"` is the path where are located `Hector`'s binaries.
+
 ### External `R` libraries
 
 The `gmwmx` package relies on a limited number of external libraries, but notably on `Rcpp` and `RcppArmadillo` which require a `C++` compiler for installation, such as for example `gcc`.
+
+## Usage from a `MATLAB` environment 
+
+It is possible to execute functions from the `gmwmx` `R` package directly from a `MATLAB` environment and to save estimated models in the `MATLAB` environment thanks to [`Rcall`](https://github.com/kreutz-lab/Rcall). [`Rcall`](https://github.com/kreutz-lab/Rcall) is an interface which runs in `MATLAB` and provides direct access to methods and software packages implemented in `R`. Refer to issue [#1](https://github.com/SMAC-Group/gmwmx/issues/1) for the detailed procedure and to the official [`Rcall`](https://github.com/kreutz-lab/Rcall) project for support.
+
 
 ## License
 
 This source code is released under is the GNU AFFERO GENERAL PUBLIC LICENSE (AGPL) v3.0. 
 
+## Acknowledgements
+We thank Dr. Machiel Bos for his helpful advises and constructive comments that helped us to improve the implementation of the `gmwmx` package and to ensure the correct integration of `Hector` into the `gmwmx` `R` package.
 
 ## References
-Cucci, D.A., Voirol, L., Kermarrec, G., Montillet, J.P. and Guerrier, S., 2022. The Generalized Method of Wavelet Moments with Exogenous Inputs: a Fast Approach for the Analysis of GNSS Position Time Series. arXiv preprint arXiv:2206.09668.
+Cucci, D. A., Voirol, L., Kermarrec, G., Montillet, J. P., & Guerrier, S. (2023). The Generalized Method of Wavelet Moments with eXogenous inputs: a fast approach for the analysis of GNSS position time series. Journal of Geodesy, 97(2), 14.
 
 Guerrier, S., Skaloud, J., Stebler, Y. and Victoria-Feser, M.P., 2013. Wavelet-variance-based estimation for composite stochastic processes. Journal of the American Statistical Association, 108(503), pp.1021-1030.
 

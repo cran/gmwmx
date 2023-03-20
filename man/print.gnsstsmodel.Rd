@@ -18,10 +18,14 @@ No return value. Print a \code{gnsstsmodel} object.
 Print method for a \code{gnsstsmodel} object.
 }
 \examples{
+\dontrun{
 data(cola)
 fit_gmwmx = estimate_gmwmx(x = cola,
                            theta_0 = c(0.1,0.1,0.1,0.1), 
                            n_seasonal = 1, 
                            model_string = "wn+matern")
+                           
 print(fit_gmwmx)
+}
+
 }
